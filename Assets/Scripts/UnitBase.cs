@@ -30,7 +30,15 @@ public abstract class UnitBase : MonoBehaviour, IDamgeable
         AttackState = new AttackState(this);
     }
 
-    protected virtual void Start()
+    public virtual void Init(int level)
+    {
+        CurrentHealth = unitStat.maxHealth;
+        Agent.speed = unitStat.moveSpeed;
+
+        stateMachine.ChangeState(IdleState);
+    }
+
+    public virtual void Init(StageManager stageManager, Player player, int stageLevel)
     {
         CurrentHealth = unitStat.maxHealth;
         Agent.speed = unitStat.moveSpeed;

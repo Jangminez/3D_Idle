@@ -15,7 +15,7 @@ MonoBehaviour:
   baseMaxHealth: 100
   baseAttackDamage: 10
   baseAttackRange: 2
-  baseAttackSpeed: 1.5
+  baseAttackSpeed: 0.8
   baseDefense: 3
   baseMoveSpeed: 3
   baseChaseRange: 5
@@ -23,6 +23,6 @@ MonoBehaviour:
   attackPerLevel: 3
   defensePerLevel: 3
   baseGoldDrop: 80
-  goldPerStage: 50
   baseExpDrop: 10
+  goldPerStage: 50
   expPerStage: 20

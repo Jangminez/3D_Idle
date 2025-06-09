@@ -1,9 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Monster : UnitBase
 {
+    private StageManager stageManager;
+
     [SerializeField] private MonsterStatSO monsterStatSO;
     [SerializeField] private int currentStage = 1;
 
@@ -12,16 +12,31 @@ public class Monster : UnitBase
 
     Player player;
 
-    protected override void Start()
+    public override void Init(StageManager stageManager, Player player, int stage)
     {
+        this.stageManager = stageManager;
+        Target = player.transform;
+        
+        currentStage = stage;
+
         statSO = monsterStatSO;
         unitStat = monsterStatSO.GetStatByLevel(currentStage);
 
         dropGold = monsterStatSO.GetGoldDrop(currentStage);
         dropExp = monsterStatSO.GetExpDrop(currentStage);
 
-        base.Start();
+        base.Init(stage);
     }
 
-    
+    public void SetStageManager(StageManager stageManager)
+    {
+        this.stageManager = stageManager;
+    }
+
+    protected override void Die()
+    {
+        stageManager.RemoveMonster(this);
+
+        base.Die();
+    }
 }

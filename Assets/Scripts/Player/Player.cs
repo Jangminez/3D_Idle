@@ -1,38 +1,39 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Player : UnitBase
 {
     [SerializeField] PlayerStatSO playerStatSO;
 
-    private List<Monster> monsters;
+    private List<Monster> monsters = new List<Monster>();
 
     private int currentLevel = 1;
     private int currentExp = 0;
     private int requiredExp;
     private int currentGold;
 
-    protected override void Start()
+    public override void Init(int level)
     {
+        currentLevel = level;
+
         statSO = playerStatSO;
         requiredExp = playerStatSO.GetRequiredExp(currentLevel);
         unitStat = playerStatSO.GetStatByLevel(currentLevel);
 
-        monsters = FindObjectsOfType<Monster>().ToList();
+        base.Init(level);
 
-        base.Start();
     }
 
     protected override void Update()
     {
         base.Update();
 
-        if (Target == null)
+        if (Target == null && monsters != null)
         {
             FindNextTarget();
         }
     }
+
     public override void Attack()
     {
         base.Attack();
@@ -41,6 +42,11 @@ public class Player : UnitBase
         {
             damgeable.TakeDamage(unitStat.attackDamage);
         }
+    }
+
+    public void SetMonsters(List<Monster> monsters)
+    {
+        this.monsters = monsters;
     }
 
     public void GetReward(int gold, int exp)
@@ -65,6 +71,8 @@ public class Player : UnitBase
 
     private void FindNextTarget()
     {
+        monsters.RemoveAll(m => m == null);
+
         float minDistance = float.MaxValue;
         Transform nearMonster = null;
 
