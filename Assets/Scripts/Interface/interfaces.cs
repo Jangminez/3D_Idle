@@ -4,3 +4,8 @@ public interface IState
     void Update();
     void Exit();
 }
+
+public interface IDamgeable
+{
+    void TakeDamage(float damage);
+}

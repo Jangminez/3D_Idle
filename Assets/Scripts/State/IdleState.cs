@@ -1,28 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class IdleState : IState
 {
-    private Unit unit;
+    private UnitBase unit;
 
-    public IdleState(Unit unit)
+    public IdleState(UnitBase unit)
     {
         this.unit = unit;
     }
 
     public void Enter()
     {
-        
+        unit.Agent.isStopped = true;
+
+        // 애니메이션
+        unit.Animator.Play("Idle");
     }
 
     public void Exit()
     {
-
+        unit.Agent.isStopped = false;
     }
 
     public void Update()
     {
-        
+        if (unit.Target != null && unit.IsTargetInRange(unit.unitStat.chaseRange))
+        {
+            unit.stateMachine.ChangeState(unit.ChasingState);
+            return;
+        }
     }
 }
