@@ -9,6 +9,8 @@ public class PlayerStatSO : UnitStatSO
 
     public int GetRequiredExp(int level)
     {
-        return baseRequiredExp + requiredExpPerLevel * level;
+        int multiplier = level - 1 <= 0 ? 0 : level - 1;
+
+        return baseRequiredExp + requiredExpPerLevel * multiplier;
     }
 }

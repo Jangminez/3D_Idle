@@ -29,11 +29,13 @@ public class UnitStatSO : ScriptableObject
 
     public UnitStat GetStatByLevel(int level)
     {
+        int multiplier = level - 1 <= 0 ? 0 : level - 1;
+
         return new UnitStat
         {
-            maxHealth = baseMaxHealth + healthPerLevel * level,
-            attackDamage = baseAttackDamage + attackPerLevel * level,
-            defense = baseDefense + defensePerLevel * level,
+            maxHealth = baseMaxHealth + healthPerLevel * multiplier,
+            attackDamage = baseAttackDamage + attackPerLevel * multiplier,
+            defense = baseDefense + defensePerLevel * multiplier,
             attackRange = baseAttackRange,
             attackSpeed = baseAttackSpeed,
             moveSpeed = baseMoveSpeed,

@@ -3,6 +3,7 @@ public class GameManager : Singleton<GameManager>
     Player player;
     StageManager stageManager;
     DataManager dataManager;
+    UIManager uIManager;
 
     protected override void Awake()
     {
@@ -11,13 +12,17 @@ public class GameManager : Singleton<GameManager>
         player = FindObjectOfType<Player>();
         stageManager = GetComponentInChildren<StageManager>();
         dataManager = GetComponentInChildren<DataManager>();
-
-        if (stageManager)
-            stageManager.Init(this, dataManager, player);
+        uIManager = GetComponentInChildren<UIManager>();
     }
 
     void Start()
     {
+        if (stageManager)
+            stageManager.Init(this, dataManager, player);
+
+        if (uIManager)
+            uIManager.Init(this, player.Events);
+            
         player.Init(1);
     }
 }

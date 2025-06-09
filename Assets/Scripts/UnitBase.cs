@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-public abstract class UnitBase : MonoBehaviour, IDamgeable
+public abstract class UnitBase : MonoBehaviour
 {
     public StateMachine stateMachine { get; private set; }
 
@@ -21,7 +21,7 @@ public abstract class UnitBase : MonoBehaviour, IDamgeable
     public AttackState AttackState { get; private set; }
 
     private HpBar hpBar;
-    public event Action<float, float> onHealthChanged;
+    public Action<float, float> onHealthChanged;
 
     protected virtual void Awake()
     {
@@ -84,19 +84,6 @@ public abstract class UnitBase : MonoBehaviour, IDamgeable
     public virtual void Attack()
     {
         Debug.Log($"{name}: 의 공격!");
-    }
-
-    public virtual void TakeDamage(float damage)
-    {
-        float finalDamage = damage - unitStat.defense <= 0 ? 1 : damage - unitStat.defense;
-        currentHealth -= finalDamage;
-
-        onHealthChanged?.Invoke(currentHealth, unitStat.maxHealth);
-
-        if (currentHealth <= 0f)
-        {
-            Die();
-        }
     }
 
     protected virtual void Die()

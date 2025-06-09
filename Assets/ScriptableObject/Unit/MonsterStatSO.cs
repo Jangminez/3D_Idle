@@ -11,11 +11,15 @@ public class MonsterStatSO : UnitStatSO
 
     public int GetGoldDrop(int stage)
     {
-        return baseGoldDrop + stage * goldPerStage;
+        int multiplier = stage - 1 <= 0 ? 0 : stage - 1;
+
+        return baseGoldDrop + goldPerStage * multiplier;
     }
 
     public int GetExpDrop(int stage)
     {
-        return baseExpDrop * stage * expPerStage;
+        int multiplier = stage - 1 <= 0 ? 0 : stage - 1;
+        
+        return baseExpDrop + expPerStage * multiplier;
     }
 }

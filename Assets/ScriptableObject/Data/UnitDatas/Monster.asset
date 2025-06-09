@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Monster
   m_EditorClassIdentifier: 
   baseMaxHealth: 100
-  baseAttackDamage: 10
+  baseAttackDamage: 15
   baseAttackRange: 2
   baseAttackSpeed: 0.8
   baseDefense: 3
@@ -25,4 +25,4 @@ MonoBehaviour:
   baseGoldDrop: 80
   baseExpDrop: 10
   goldPerStage: 50
-  expPerStage: 20
+  expPerStage: 50

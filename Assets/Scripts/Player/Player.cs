@@ -1,21 +1,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : UnitBase
+public class Player : UnitBase, IDamgeable
 {
     [SerializeField] PlayerStatSO playerStatSO;
-    private PlayerEventHandler playerEvent;
     private List<Monster> monsters = new List<Monster>();
 
     private int currentLevel = 1;
     private int currentExp = 0;
     private int requiredExp;
     private int currentGold;
-    
+
+    private float bonusHealth = 0f;
+    private float bonusAttackDamage = 0f;
+    private float bonusDefense = 0f;
+    private float bonusAttackSpeed = 0f;
+
+    private float TotalMaxHealth => unitStat.maxHealth + bonusHealth;
+    private float TotalAttackDamage => unitStat.attackDamage + bonusAttackDamage;
+    private float TotalDefense => unitStat.defense + bonusDefense;
+    private float TotalAttackSpeed => unitStat.attackSpeed + bonusAttackSpeed;
+
+    private PlayerEventHandler playerEvent;
+    public PlayerEventHandler Events { get => playerEvent; }
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        playerEvent = new PlayerEventHandler();
+    }
+
     public override void Init(int level)
     {
-        playerEvent = new PlayerEventHandler();
-
         currentLevel = level;
 
         statSO = playerStatSO;
@@ -23,6 +40,8 @@ public class Player : UnitBase
         unitStat = playerStatSO.GetStatByLevel(currentLevel);
 
         base.Init(level);
+
+        InitRaiseEvents();
     }
 
     protected override void Update()
@@ -35,13 +54,32 @@ public class Player : UnitBase
         }
     }
 
+    void InitRaiseEvents()
+    {
+        playerEvent.RaiseLevelChanged(currentLevel);
+        playerEvent.RaiseGoldChanged(currentGold);
+        playerEvent.RaiseExpChanged(currentExp, requiredExp);
+    }
+
     public override void Attack()
     {
         base.Attack();
 
         if (Target.TryGetComponent(out IDamgeable damgeable))
         {
-            damgeable.TakeDamage(unitStat.attackDamage);
+            damgeable.TakeDamage(TotalAttackDamage);
+        }
+    }
+    public void TakeDamage(float damage)
+    {
+        float finalDamage = damage - TotalDefense > 0 ? damage - TotalDefense : 1;
+        currentHealth -= finalDamage;
+
+        onHealthChanged?.Invoke(currentHealth, TotalMaxHealth);
+
+        if (currentHealth <= 0f)
+        {
+            Die();
         }
     }
 
@@ -55,7 +93,9 @@ public class Player : UnitBase
         currentGold += gold;
         currentExp += exp;
 
-        playerEvent.RaiseRewarded(currentGold, currentExp);
+        playerEvent.RaiseGoldChanged(currentGold);
+        playerEvent.RaiseExpChanged(currentExp, requiredExp);
+
         LevelUp();
     }
 
@@ -70,6 +110,7 @@ public class Player : UnitBase
             requiredExp = playerStatSO.GetRequiredExp(currentLevel);
 
             playerEvent.RaiseLevelChanged(currentLevel);
+            playerEvent.RaiseExpChanged(currentExp, requiredExp);
         }
     }
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Monster : UnitBase
+public class Monster : UnitBase, IDamgeable
 {
     private StageManager stageManager;
 
@@ -15,6 +15,7 @@ public class Monster : UnitBase
     public override void Init(StageManager stageManager, Player player, int stage)
     {
         this.stageManager = stageManager;
+        this.player = player;
         Target = player.transform;
 
         currentStage = stage;
@@ -42,10 +43,24 @@ public class Monster : UnitBase
             damgeable.TakeDamage(unitStat.attackDamage);
         }
     }
-    
+
+    public void TakeDamage(float damage)
+    {
+        float finalDamage = damage - unitStat.defense > 0 ? damage - unitStat.defense : 1;
+        currentHealth -= finalDamage;
+
+        onHealthChanged?.Invoke(currentHealth, unitStat.maxHealth);
+
+        if (currentHealth <= 0f)
+        {
+            Die();
+        }
+    }
+
     protected override void Die()
     {
         stageManager.RemoveMonster(this);
+        player.GetReward(dropGold, dropExp);
 
         base.Die();
     }
