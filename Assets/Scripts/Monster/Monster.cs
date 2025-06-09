@@ -16,7 +16,7 @@ public class Monster : UnitBase
     {
         this.stageManager = stageManager;
         Target = player.transform;
-        
+
         currentStage = stage;
 
         statSO = monsterStatSO;
@@ -33,6 +33,16 @@ public class Monster : UnitBase
         this.stageManager = stageManager;
     }
 
+    public override void Attack()
+    {
+        base.Attack();
+
+        if (Target.TryGetComponent(out IDamgeable damgeable))
+        {
+            damgeable.TakeDamage(unitStat.attackDamage);
+        }
+    }
+    
     protected override void Die()
     {
         stageManager.RemoveMonster(this);

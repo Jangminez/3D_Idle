@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -13,16 +14,20 @@ public abstract class UnitBase : MonoBehaviour, IDamgeable
     [Header("Stat")]
     protected UnitStatSO statSO;
     public UnitStat unitStat;
-    public float CurrentHealth { get; protected set; }
+    protected float currentHealth;
 
     public IdleState IdleState { get; private set; }
     public ChasingState ChasingState { get; private set; }
     public AttackState AttackState { get; private set; }
 
+    private HpBar hpBar;
+    public event Action<float, float> onHealthChanged;
+
     protected virtual void Awake()
     {
         Agent = GetComponent<NavMeshAgent>();
         Animator = GetComponent<Animator>();
+        hpBar = GetComponent<HpBar>();
 
         stateMachine = new StateMachine();
         IdleState = new IdleState(this);
@@ -32,15 +37,21 @@ public abstract class UnitBase : MonoBehaviour, IDamgeable
 
     public virtual void Init(int level)
     {
-        CurrentHealth = unitStat.maxHealth;
+        currentHealth = unitStat.maxHealth;
         Agent.speed = unitStat.moveSpeed;
 
         stateMachine.ChangeState(IdleState);
+
+        if (hpBar != null)
+        {
+            hpBar.Init(this);
+        }
+        
     }
 
     public virtual void Init(StageManager stageManager, Player player, int stageLevel)
     {
-        CurrentHealth = unitStat.maxHealth;
+        currentHealth = unitStat.maxHealth;
         Agent.speed = unitStat.moveSpeed;
 
         stateMachine.ChangeState(IdleState);
@@ -78,9 +89,11 @@ public abstract class UnitBase : MonoBehaviour, IDamgeable
     public virtual void TakeDamage(float damage)
     {
         float finalDamage = damage - unitStat.defense <= 0 ? 1 : damage - unitStat.defense;
-        CurrentHealth -= finalDamage;
+        currentHealth -= finalDamage;
 
-        if (CurrentHealth <= 0f)
+        onHealthChanged?.Invoke(currentHealth, unitStat.maxHealth);
+
+        if (currentHealth <= 0f)
         {
             Die();
         }

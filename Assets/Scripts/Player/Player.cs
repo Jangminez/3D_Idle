@@ -4,16 +4,18 @@ using UnityEngine;
 public class Player : UnitBase
 {
     [SerializeField] PlayerStatSO playerStatSO;
-
+    private PlayerEventHandler playerEvent;
     private List<Monster> monsters = new List<Monster>();
 
     private int currentLevel = 1;
     private int currentExp = 0;
     private int requiredExp;
     private int currentGold;
-
+    
     public override void Init(int level)
     {
+        playerEvent = new PlayerEventHandler();
+
         currentLevel = level;
 
         statSO = playerStatSO;
@@ -21,7 +23,6 @@ public class Player : UnitBase
         unitStat = playerStatSO.GetStatByLevel(currentLevel);
 
         base.Init(level);
-
     }
 
     protected override void Update()
@@ -51,9 +52,10 @@ public class Player : UnitBase
 
     public void GetReward(int gold, int exp)
     {
-        currentExp += exp;
         currentGold += gold;
+        currentExp += exp;
 
+        playerEvent.RaiseRewarded(currentGold, currentExp);
         LevelUp();
     }
 
@@ -66,6 +68,8 @@ public class Player : UnitBase
 
             unitStat = playerStatSO.GetStatByLevel(currentLevel);
             requiredExp = playerStatSO.GetRequiredExp(currentLevel);
+
+            playerEvent.RaiseLevelChanged(currentLevel);
         }
     }
 

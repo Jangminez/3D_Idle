@@ -40,7 +40,7 @@ public class AttackState : IState
 
         if (Time.time - lastAttackTime >= attackCooldown)
         {
-            unit.Attack();
+            //unit.Attack();
             lastAttackTime = Time.time;
         }
     }
