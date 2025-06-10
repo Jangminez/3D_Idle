@@ -8,8 +8,12 @@ public class DataManager : MonoBehaviour
     private Dictionary<int, StageData> stageDataDict;
 
     [Header("MonsterData")]
-    [SerializeField] private List<Monster> monsterList;
-    private Dictionary<string, Monster> monsterDict;
+    [SerializeField] private List<Monster> monsterDataList;
+    private Dictionary<string, Monster> monsterDataDict;
+
+    [Header("ItemData")]
+    [SerializeField] private List<ItemData> itemDataList;
+    private Dictionary<int, ItemData> itemDataDict;
 
     void Awake()
     {
@@ -20,11 +24,18 @@ public class DataManager : MonoBehaviour
             stageDataDict.Add(stage.stageKey, stage);
         }
 
-        monsterDict = new Dictionary<string, Monster>();
+        monsterDataDict = new Dictionary<string, Monster>();
 
-        foreach (var monster in monsterList)
+        foreach (var monster in monsterDataList)
         {
-            monsterDict.Add(monster.name, monster);
+            monsterDataDict.Add(monster.name, monster);
+        }
+
+        itemDataDict = new Dictionary<int, ItemData>();
+
+        foreach (var item in itemDataList)
+        {
+            itemDataDict.Add(item.itemKey, item);
         }
     }
 
@@ -40,9 +51,19 @@ public class DataManager : MonoBehaviour
 
     public Monster GetMonsterByType(string type)
     {
-        if (monsterDict.ContainsKey(type))
+        if (monsterDataDict.ContainsKey(type))
         {
-            return monsterDict[type];
+            return monsterDataDict[type];
+        }
+
+        return null;
+    }
+
+    public ItemData GetItemByKey(int key)
+    {
+        if (itemDataDict.ContainsKey(key))
+        {
+            return itemDataDict[key];
         }
 
         return null;
