@@ -5,10 +5,12 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     private GameManager gameManager;
+
     public Player Player { get; private set; }
     public GameUI GameUI { get; private set; }
     public InventoryUI InventoryUI { get; private set; }
     public ShopUI ShopUI { get; private set; }
+    public StageUI StageUI { get; private set; }
     public StatusUI StatusUI { get; private set; }
 
     [Header("Tab Buttons")]
@@ -27,6 +29,7 @@ public class UIManager : MonoBehaviour
         GameUI = GetComponentInChildren<GameUI>();
         InventoryUI = GetComponentInChildren<InventoryUI>();
         ShopUI = GetComponentInChildren<ShopUI>();
+        StageUI = GetComponentInChildren<StageUI>();
         StatusUI = GetComponentInChildren<StatusUI>();
 
         if (GameUI)
@@ -46,6 +49,13 @@ public class UIManager : MonoBehaviour
             shopButton.onClick.AddListener(() => TogglePanel(ShopUI.gameObject));
         }
 
+        if (StageUI)
+        {
+            StageUI.Init(gameManager.StageManager, gameManager.DataManager);
+            togglePanels.Add(StageUI.gameObject);
+            stageButton.onClick.AddListener(() => TogglePanel(StageUI.gameObject));
+        }
+        
         if (StatusUI)
         {
             StatusUI.Init(Player);

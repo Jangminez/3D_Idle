@@ -53,6 +53,13 @@ public class DataManager : MonoBehaviour
         return null;
     }
 
+    public Dictionary<int, StageData> GetStageDict()
+    {
+        if (stageDataDict == null) return null;
+
+        return stageDataDict;
+    }
+
     public Monster GetMonsterByType(string type)
     {
         if (monsterDataDict.ContainsKey(type))

@@ -10,7 +10,9 @@ public class StageManager : MonoBehaviour
     private MonsterSpawner monsterSpawner;
     private Player player;
 
-    [SerializeField] private int curStageKey;
+    [SerializeField] private int curStageKey = 1;
+    [SerializeField] private Transform stageParent;
+
     private List<Monster> waveMonsters = new List<Monster>();
     private StageData stageData;
     private MapInfo mapInfo;
@@ -28,27 +30,40 @@ public class StageManager : MonoBehaviour
         if (monsterSpawner)
             monsterSpawner.Init(dataManager);
 
-        SetStage(1);
+        SetStage(curStageKey);
     }
 
     public void SetStage(int stageKey)
     {
         if (stageCoroutine != null)
         {
-            StopCoroutine(stageCoroutine);
+            StopAllCoroutines();
+
+            foreach (var monster in waveMonsters)
+            {
+                Destroy(monster.gameObject);
+            }
+
+            waveMonsters.Clear();
+            mapInfo = null;
         }
 
         curStageKey = stageKey;
         StartStage();
     }
 
-    public void StartStage()
+    private void StartStage()
     {
         stageData = dataManager.GetStageDataByStageKey(curStageKey);
 
         if (stageData != null)
         {
-            mapInfo = Instantiate(stageData.stagePrefab).GetComponent<MapInfo>();
+            if (stageParent.childCount > 0)
+            {
+                Destroy(stageParent.GetChild(0).gameObject);
+            }
+            
+            mapInfo = Instantiate(stageData.stagePrefab, stageParent).GetComponent<MapInfo>();
             player.StartStage(mapInfo.GetPlayerPosition());
 
             stageCoroutine = StartCoroutine(StageCoroutine());
