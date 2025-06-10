@@ -20,7 +20,7 @@ public class DataManager : MonoBehaviour
         stageDatas = Resources.LoadAll<StageData>("Data/Stage");
         monsterPrefabs = Resources.LoadAll<Monster>("Data/Monster");
         itemDatas = Resources.LoadAll<ItemData>("Data/Item");
-        
+
         stageDataDict = new Dictionary<int, StageData>();
 
         foreach (var stage in stageDatas)
@@ -71,5 +71,12 @@ public class DataManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    public Dictionary<int, ItemData> GetItemDict()
+    {
+        if (itemDataDict == null) return null;
+        
+        return itemDataDict;
     }
 }

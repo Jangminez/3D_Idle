@@ -6,8 +6,10 @@ public class UIManager : MonoBehaviour
 {
     private GameManager gameManager;
     public Player Player { get; private set; }
-    private GameUI gameUI;
-    private InventoryUI inventoryUI;
+    public GameUI GameUI { get; private set; }
+    public InventoryUI InventoryUI { get; private set; }
+    public ShopUI ShopUI { get; private set; }
+
 
     [Header("Tab Buttons")]
     [SerializeField] Button inventoryButton;
@@ -22,18 +24,24 @@ public class UIManager : MonoBehaviour
         this.gameManager = gameManager;
         Player = gameManager.Player;
 
-        gameUI = GetComponentInChildren<GameUI>();
-        inventoryUI = GetComponentInChildren<InventoryUI>();
+        GameUI = GetComponentInChildren<GameUI>();
+        InventoryUI = GetComponentInChildren<InventoryUI>();
+        ShopUI = GetComponentInChildren<ShopUI>();
 
-        if (gameUI)
-            gameUI.Init(this);
+        if (GameUI)
+            GameUI.Init(this);
 
-        if (inventoryUI)
-            inventoryUI.Init(this);
+        if (InventoryUI)
+            InventoryUI.Init(Player);
 
-        togglePanels.Add(inventoryUI.gameObject);
+        if (ShopUI)
+            ShopUI.Init(this, gameManager.DataManager);
 
-        inventoryButton.onClick.AddListener(() => TogglePanel(inventoryUI.gameObject));
+        togglePanels.Add(InventoryUI.gameObject);
+        togglePanels.Add(ShopUI.gameObject);
+
+        inventoryButton.onClick.AddListener(() => TogglePanel(InventoryUI.gameObject));
+        shopButton.onClick.AddListener(() => TogglePanel(ShopUI.gameObject));
 
         InitPanel();
     }

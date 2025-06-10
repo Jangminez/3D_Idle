@@ -9,6 +9,7 @@ public class GameUI : MonoBehaviour
     [SerializeField] Image expBar;
     [SerializeField] TextMeshProUGUI levelText;
     [SerializeField] TextMeshProUGUI goldText;
+    [SerializeField] TextMeshProUGUI stageText;
 
     public void Init(UIManager uIManager)
     {

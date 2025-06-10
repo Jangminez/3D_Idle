@@ -18,6 +18,8 @@ MonoBehaviour:
   equipType: 4
   statType: 3
   baseValue: 2
+  valuePerUpgradeLevel: 0.1
+  costPerUpgradeLevel: 1000
   description: 'Increase Speed {0}    '
   isConsumable: 0
   isTemporary: 0

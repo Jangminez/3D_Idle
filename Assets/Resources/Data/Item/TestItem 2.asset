@@ -18,7 +18,9 @@ MonoBehaviour:
   equipType: 3
   statType: 2
   baseValue: 30
-  description: 'Defense {0} Increase '
+  valuePerUpgradeLevel: 20
+  costPerUpgradeLevel: 200
+  description: 'Increase Defense {0} '
   isConsumable: 0
   isTemporary: 0
   duration: 0

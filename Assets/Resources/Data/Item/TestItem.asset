@@ -18,7 +18,9 @@ MonoBehaviour:
   equipType: 0
   statType: 0
   baseValue: 30
-  description: 'AttackDamage {0} Increase '
+  valuePerUpgradeLevel: 10
+  costPerUpgradeLevel: 100
+  description: Increase AttackDamage {0}
   isConsumable: 0
   isTemporary: 0
   duration: 0

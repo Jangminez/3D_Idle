@@ -83,6 +83,12 @@ public class Player : UnitBase, IDamgeable
         playerEvent.RaiseExpChanged(currentExp, requiredExp);
     }
 
+    public void StartStage(Vector3 startPosition)
+    {
+        transform.position = startPosition;
+        CurrentHealth = TotalMaxHealth;
+    }
+
     public override void Attack()
     {
         base.Attack();
@@ -128,6 +134,7 @@ public class Player : UnitBase, IDamgeable
 
             unitStat = playerStatSO.GetStatByLevel(currentLevel);
             requiredExp = playerStatSO.GetRequiredExp(currentLevel);
+            CurrentHealth = unitStat.maxHealth;
 
             playerEvent.RaiseLevelChanged(currentLevel);
             playerEvent.RaiseExpChanged(currentExp, requiredExp);

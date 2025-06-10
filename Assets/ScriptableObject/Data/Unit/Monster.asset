@@ -23,6 +23,6 @@ MonoBehaviour:
   attackPerLevel: 3
   defensePerLevel: 3
   baseGoldDrop: 80
-  baseExpDrop: 10
+  baseExpDrop: 30
   goldPerStage: 50
   expPerStage: 50

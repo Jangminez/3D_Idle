@@ -49,7 +49,7 @@ public class StageManager : MonoBehaviour
         if (stageData != null)
         {
             mapInfo = Instantiate(stageData.stagePrefab).GetComponent<MapInfo>();
-            player.transform.position = mapInfo.GetPlayerPosition();
+            player.StartStage(mapInfo.GetPlayerPosition());
 
             stageCoroutine = StartCoroutine(StageCoroutine());
         }
@@ -57,27 +57,25 @@ public class StageManager : MonoBehaviour
 
     IEnumerator StageCoroutine()
     {
-        while (true)
+        foreach (var wave in stageData.waves)
         {
-            foreach (var wave in stageData.waves)
+            SpawnWave(wave, () =>
             {
-                SpawnWave(wave, () =>
-                {
-                    player.SetMonsters(waveMonsters);
-                });
+                player.SetMonsters(waveMonsters);
+            });
 
-                yield return new WaitUntil(() => IsWaveCleared());
-                yield return new WaitForSeconds(wave.delayToNextWave);
-            }
-
-            if (stageData.hasBoss)
-            {
-                SpawnBoss(stageData.bossType);
-                yield return new WaitUntil(() => IsBossDeath());
-            }
-
-            yield return new WaitForSeconds(3f);
+            yield return new WaitUntil(() => IsWaveCleared());
+            yield return new WaitForSeconds(wave.delayToNextWave);
         }
+
+        if (stageData.hasBoss)
+        {
+            SpawnBoss(stageData.bossType);
+            yield return new WaitUntil(() => IsBossDeath());
+        }
+
+        yield return new WaitForSeconds(3f);
+        StartStage();
     }
 
     private void SpawnWave(WaveData wave, Action onCompleted)

@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
-    private UIManager uIManager;
     private Player player;
 
     [SerializeField] Transform itemSlotParent;
@@ -41,10 +40,9 @@ public class InventoryUI : MonoBehaviour
 
     public Action<ItemInstance, bool> onItemEquipped;
 
-    public void Init(UIManager uIManager)
+    public void Init(Player player)
     {
-        this.uIManager = uIManager;
-        player = uIManager.Player;
+        this.player = player;
 
         equipExitButton.onClick.AddListener(ClosePopUp);
         consumableExitButton.onClick.AddListener(ClosePopUp);
@@ -57,13 +55,6 @@ public class InventoryUI : MonoBehaviour
             slot.Init(this);
             equipmentSlotDict.Add(slot.SlotType, slot);
         }
-
-        DataManager dataManager = GameManager.Instance.DataManager;
-        AddItem(dataManager.GetItemByKey(1));
-        AddItem(dataManager.GetItemByKey(2));
-        AddItem(dataManager.GetItemByKey(3));
-        AddItem(dataManager.GetItemByKey(4));
-        AddItem(dataManager.GetItemByKey(5), 10);
     }
 
     private void OnEnable()
@@ -196,7 +187,7 @@ public class InventoryUI : MonoBehaviour
 
     public void SetConsumablePopUp(ItemInstance itemInstance, ItemSlot itemSlot)
     {
-        //if (itemInstance == null || itemSlot == null) return;
+        if (itemInstance == null || itemSlot == null) return;
 
         selectedItem = itemInstance;
         selectedSlot = itemSlot;
