@@ -28,7 +28,6 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] Button equipButton;
     [SerializeField] Button equipExitButton;
 
-
     [Header("Consumable PopUp")]
     [SerializeField] TextMeshProUGUI consumableNameText;
     [SerializeField] TextMeshProUGUI consumableDescText;
