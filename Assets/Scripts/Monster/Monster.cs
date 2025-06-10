@@ -22,7 +22,8 @@ public class Monster : UnitBase, IDamgeable
 
         statSO = monsterStatSO;
         unitStat = monsterStatSO.GetStatByLevel(currentStage);
-
+        currentHealth = unitStat.maxHealth;
+        
         dropGold = monsterStatSO.GetGoldDrop(currentStage);
         dropExp = monsterStatSO.GetExpDrop(currentStage);
 

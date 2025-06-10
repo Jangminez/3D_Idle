@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,15 +12,34 @@ public class Player : UnitBase, IDamgeable
     private int requiredExp;
     private int currentGold;
 
-    private float bonusHealth = 0f;
-    private float bonusAttackDamage = 0f;
-    private float bonusDefense = 0f;
-    private float bonusAttackSpeed = 0f;
+    public float CurrentHealth
+    {
+        get => currentHealth;
+        set
+        {
+            currentHealth = Mathf.Clamp(value, 0f, TotalMaxHealth);
+            onHealthChanged?.Invoke(currentHealth, TotalMaxHealth);
+        }
+    }
 
-    private float TotalMaxHealth => unitStat.maxHealth + bonusHealth;
-    private float TotalAttackDamage => unitStat.attackDamage + bonusAttackDamage;
-    private float TotalDefense => unitStat.defense + bonusDefense;
-    private float TotalAttackSpeed => unitStat.attackSpeed + bonusAttackSpeed;
+    [Header("Equipment Bonus Stats")]
+    [SerializeField] private float bonusHealth = 0f;
+    [SerializeField] private float bonusAttackDamage = 0f;
+    [SerializeField] private float bonusDefense = 0f;
+    [SerializeField] private float bonusAttackSpeed = 0f;
+    [SerializeField] private float bonusSpeed = 0f;
+
+    [Header("Stat Multiplier")]
+    [SerializeField] private float attackDamageMultiplier = 1f;
+    [SerializeField] private float defenseMultiplier = 1f;
+    [SerializeField] private float attackSpeedMultiplier = 1f;
+    [SerializeField] private float speedMultiplier = 1f;
+
+    public float TotalMaxHealth => Stat.maxHealth + bonusHealth;
+    public float TotalAttackDamage => (Stat.attackDamage + bonusAttackDamage) * attackDamageMultiplier;
+    public float TotalDefense => (Stat.defense + bonusDefense) * defenseMultiplier;
+    public float TotalAttackSpeed => (Stat.attackSpeed + bonusAttackSpeed) * attackSpeedMultiplier;
+    public float TotalSpeed => (Stat.moveSpeed + bonusSpeed) * speedMultiplier;
 
     private PlayerEventHandler playerEvent;
     public PlayerEventHandler Events { get => playerEvent; }
@@ -38,6 +58,8 @@ public class Player : UnitBase, IDamgeable
         statSO = playerStatSO;
         requiredExp = playerStatSO.GetRequiredExp(currentLevel);
         unitStat = playerStatSO.GetStatByLevel(currentLevel);
+
+        currentHealth = TotalMaxHealth;
 
         base.Init(level);
 
@@ -73,11 +95,9 @@ public class Player : UnitBase, IDamgeable
     public void TakeDamage(float damage)
     {
         float finalDamage = damage - TotalDefense > 0 ? damage - TotalDefense : 1;
-        currentHealth -= finalDamage;
+        CurrentHealth -= finalDamage;
 
-        onHealthChanged?.Invoke(currentHealth, TotalMaxHealth);
-
-        if (currentHealth <= 0f)
+        if (CurrentHealth <= 0f)
         {
             Die();
         }
@@ -139,5 +159,105 @@ public class Player : UnitBase, IDamgeable
 
         if (nearMonster != null)
             Target = nearMonster;
+    }
+
+    public bool UseGold(int needGold)
+    {
+        if (currentGold >= needGold)
+        {
+            currentGold -= needGold;
+            Events.RaiseGoldChanged(currentGold);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public void CalculateBonusStat(List<ItemInstance> equippedItems)
+    {
+        ResetBonusStats();
+
+        foreach (var item in equippedItems)
+        {
+            ApplyBonusStat(item.ItemData.statType, item.GetTotalStatValue());
+        }
+    }
+
+    private void ResetBonusStats()
+    {
+        bonusAttackDamage = 0f;
+        bonusAttackSpeed = 0f;
+        bonusDefense = 0f;
+        bonusSpeed = 0f;
+        bonusHealth = 0f;
+    }
+
+    private void ApplyBonusStat(StatType type, float value)
+    {
+        switch (type)
+        {
+            case StatType.Attack:
+                bonusAttackDamage += value;
+                break;
+            case StatType.AttackSpeed:
+                bonusAttackSpeed += value;
+                break;
+            case StatType.Defense:
+                bonusDefense += value;
+                break;
+            case StatType.Speed:
+                bonusSpeed += value;
+                break;
+            case StatType.Health:
+                bonusHealth += value;
+                break;
+        }
+    }
+
+    public void ApplyItemEffect(ItemInstance item)
+    {
+        if (item == null) return;
+
+        ItemData itemData = item.ItemData;
+
+        if (itemData.isConsumable)
+        {
+            if (itemData.isTemporary)
+            {
+                StartCoroutine(ApplyTemporaryEffect(itemData.statType, itemData.baseValue, itemData.duration));
+            }
+            else
+            {
+                float healAmount = TotalMaxHealth * itemData.baseValue;
+                CurrentHealth += healAmount;
+            }
+        }
+    }
+
+    private IEnumerator ApplyTemporaryEffect(StatType type, float multiplier, float duration)
+    {
+        ApplyMultiplier(type, multiplier, true);
+        yield return new WaitForSeconds(duration);
+        ApplyMultiplier(type, multiplier, false);
+    }
+
+    private void ApplyMultiplier(StatType type, float multiplier, bool isApply)
+    {
+        switch (type)
+        {
+            case StatType.Attack:
+                attackDamageMultiplier = isApply ? attackDamageMultiplier + multiplier : attackDamageMultiplier - multiplier;
+                break;
+            case StatType.AttackSpeed:
+                attackSpeedMultiplier = isApply ? attackSpeedMultiplier + multiplier : attackSpeedMultiplier - multiplier;
+                break;
+            case StatType.Defense:
+                defenseMultiplier = isApply ? defenseMultiplier + multiplier : defenseMultiplier - multiplier;
+                break;
+            case StatType.Speed:
+                speedMultiplier = isApply ? speedMultiplier + multiplier : speedMultiplier - multiplier;
+                break;
+        }
     }
 }

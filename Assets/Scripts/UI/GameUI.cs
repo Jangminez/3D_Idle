@@ -13,13 +13,20 @@ public class GameUI : MonoBehaviour
     public void Init(UIManager uIManager)
     {
         this.uIManager = uIManager;
-        playerEvent = uIManager.PlayerEvents;
+        playerEvent = uIManager.Player.Events;
+
+        OnEnable();
+    }
+
+    void OnEnable()
+    {
+        if (playerEvent == null) return;
 
         playerEvent.onLevelChanged += UpdateLevelUI;
         playerEvent.onExpChanged += UpdateExpUI;
         playerEvent.onGoldChanged += UpdateGoldUI;
     }
-
+    
     void OnDisable()
     {
         playerEvent.onLevelChanged -= UpdateLevelUI;
@@ -41,5 +48,4 @@ public class GameUI : MonoBehaviour
     {
         goldText.text = gold.ToString();
     }
-
 }

@@ -11,6 +11,11 @@ public class ChasingState : IState
     {
         // 뛰는 애니메이션
         unit.Animator.Play("Run");
+
+        if (unit.TryGetComponent(out Player player))
+        {
+            unit.Agent.speed = player.TotalSpeed;
+        }
     }
 
     public void Exit()
@@ -28,7 +33,7 @@ public class ChasingState : IState
 
         unit.Agent.SetDestination(unit.Target.position);
 
-        if (unit.IsTargetInRange(unit.unitStat.attackRange))
+        if (unit.IsTargetInRange(unit.Stat.attackRange))
         {
             unit.stateMachine.ChangeState(unit.AttackState);
         }

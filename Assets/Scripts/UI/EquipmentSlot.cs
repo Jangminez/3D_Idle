@@ -3,41 +3,58 @@ using UnityEngine.UI;
 
 public class EquipmentSlot : MonoBehaviour
 {
-    private ItemData equipItemSO;
+    private InventoryUI inventoryUI;
+
+    private ItemInstance equippedItem;
+    public ItemInstance EquippedItem { get => equippedItem; }
+
     [SerializeField] EquipType slotType;
+    public EquipType SlotType { get => slotType; }
 
     [Header("UI")]
     [SerializeField] Image icon;
-    [SerializeField] GameObject popUpUI;
-    [SerializeField] 
     private Button slotBtn;
 
-    void Awake()
+    public void Init(InventoryUI inventoryUI)
     {
+        this.inventoryUI = inventoryUI;
+
         slotBtn = GetComponent<Button>();
-        icon = GetComponentInChildren<Image>();
-        icon.enabled = false;
-    }
 
-    public void Equip(ItemData itemData)
-    {
-        if (itemData == null) return;
-
-        equipItemSO = itemData;
-        icon.sprite = equipItemSO.itemIcon;
-        icon.enabled = true;
+        if (transform.Find("Icon").TryGetComponent(out icon))
+        {
+            icon.enabled = false;
+        }
 
         slotBtn.onClick.AddListener(OpenDescription);
     }
 
+    public void Equip(ItemInstance itemInstance)
+    {
+        if (itemInstance == null) return;
+
+        equippedItem = itemInstance;
+        equippedItem.EquipItem(true);
+
+        icon.sprite = equippedItem.ItemData.itemIcon;
+        icon.enabled = true;
+
+        inventoryUI.onItemEquipped?.Invoke(itemInstance, true);
+    }
+
     public void UnEquip()
     {
-        equipItemSO = null;
+        inventoryUI.onItemEquipped?.Invoke(equippedItem, false);
+
+        equippedItem.EquipItem(false);
+        equippedItem = null;
         icon.enabled = false;
     }
 
     private void OpenDescription()
     {
+        if (equippedItem == null) return;
 
+        inventoryUI.SetEquipmentPopUp(equippedItem);
     }
 }

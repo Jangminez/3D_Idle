@@ -5,7 +5,8 @@ public enum EquipType
     Helmet,
     Armor,
     Shoes,
-    Pants
+    Pants,
+    None,
 }
 
 public enum StatType

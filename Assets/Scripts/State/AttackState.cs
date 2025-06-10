@@ -14,12 +14,16 @@ public class AttackState : IState
 
     public void Enter()
     {
+        if (unit.TryGetComponent(out Player player))
+            attackCooldown = player.TotalAttackSpeed;
+        else
+            attackCooldown = 1 / unit.Stat.attackSpeed;
+
         unit.Agent.isStopped = true;
-        attackCooldown = 1 / unit.unitStat.attackSpeed;
         lastAttackTime = -attackCooldown;
-        
+
         // 공격 애니메이션
-        unit.Animator.SetFloat("AttackSpeed", unit.unitStat.attackSpeed);
+        unit.Animator.SetFloat("AttackSpeed", unit.Stat.attackSpeed);
         unit.Animator.Play("Attack");
     }
 
@@ -30,7 +34,7 @@ public class AttackState : IState
 
     public void Update()
     {
-        if (unit.Target == null || !unit.IsTargetInRange(unit.unitStat.attackRange))
+        if (unit.Target == null || !unit.IsTargetInRange(unit.Stat.attackRange))
         {
             unit.stateMachine.ChangeState(unit.IdleState);
             return;

@@ -15,23 +15,34 @@ public class StageManager : MonoBehaviour
     private StageData stageData;
     private MapInfo mapInfo;
 
-    public void Init(GameManager gameManager, DataManager dataManager, Player player)
+    private Coroutine stageCoroutine;
+
+    public void Init(GameManager gameManager)
     {
         this.gameManager = gameManager;
-        this.dataManager = dataManager;
-        this.player = player;
+        player = gameManager.Player;
+        dataManager = gameManager.DataManager;
 
         monsterSpawner = GetComponentInChildren<MonsterSpawner>();
 
         if (monsterSpawner)
             monsterSpawner.Init(dataManager);
 
-        curStageKey = 1;
+        SetStage(1);
+    }
 
+    public void SetStage(int stageKey)
+    {
+        if (stageCoroutine != null)
+        {
+            StopCoroutine(stageCoroutine);
+        }
+
+        curStageKey = stageKey;
         StartStage();
     }
 
-    public void StartStage( )
+    public void StartStage()
     {
         stageData = dataManager.GetStageDataByStageKey(curStageKey);
 
@@ -39,31 +50,34 @@ public class StageManager : MonoBehaviour
         {
             mapInfo = Instantiate(stageData.stagePrefab).GetComponent<MapInfo>();
             player.transform.position = mapInfo.GetPlayerPosition();
-    
-            StartCoroutine(StageCoroutine());
+
+            stageCoroutine = StartCoroutine(StageCoroutine());
         }
     }
 
     IEnumerator StageCoroutine()
     {
-        foreach (var wave in stageData.waves)
+        while (true)
         {
-            SpawnWave(wave, () =>
+            foreach (var wave in stageData.waves)
             {
-                player.SetMonsters(waveMonsters);
-            });
-            
-            yield return new WaitUntil(() => IsWaveCleared());
-            yield return new WaitForSeconds(wave.delayToNextWave);
-        }
+                SpawnWave(wave, () =>
+                {
+                    player.SetMonsters(waveMonsters);
+                });
 
-        if (stageData.hasBoss)
-        {
-            SpawnBoss(stageData.bossType);
-            yield return new WaitUntil(() => IsBossDeath());
-        }
+                yield return new WaitUntil(() => IsWaveCleared());
+                yield return new WaitForSeconds(wave.delayToNextWave);
+            }
 
-        curStageKey++;
+            if (stageData.hasBoss)
+            {
+                SpawnBoss(stageData.bossType);
+                yield return new WaitUntil(() => IsBossDeath());
+            }
+
+            yield return new WaitForSeconds(3f);
+        }
     }
 
     private void SpawnWave(WaveData wave, Action onCompleted)

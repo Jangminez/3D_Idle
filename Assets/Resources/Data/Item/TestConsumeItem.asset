@@ -10,12 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1460b201d945d6f4093ea32898beb62c, type: 3}
-  m_Name: TestItem
+  m_Name: TestConsumeItem
   m_EditorClassIdentifier: 
-  itemKey: 101
-  equipType: 0
-  stats:
-  - statType: 0
-    value: 50
-  - statType: 1
-    value: 0.5
+  itemKey: 5
+  itemName: Hp Potion
+  itemIcon: {fileID: 21300000, guid: 7b3876a2b72c44540a4bbd5aaba9e506, type: 3}
+  equipType: 6
+  statType: 4
+  baseValue: 0.3
+  itemCount: 0
+  description: 'Heal Hp {0}%    '
+  isConsumable: 1
+  isTemporary: 0
+  duration: 0

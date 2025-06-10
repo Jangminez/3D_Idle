@@ -4,7 +4,8 @@ using UnityEngine.UI;
 
 public class ItemSlot : MonoBehaviour
 {
-    private ItemData itemSO;
+    private InventoryUI inventoryUI;
+    public ItemInstance SlotItem { get; private set; }
 
     [Header("UI")]
     [SerializeField] Image icon;
@@ -12,20 +13,38 @@ public class ItemSlot : MonoBehaviour
     [SerializeField] TextMeshProUGUI countText;
     private Button slotBtn;
 
-    private int itemCount = 0;
+
+    public void Init(InventoryUI inventoryUI)
+    {
+        this.inventoryUI = inventoryUI;
+
+        OnEnable();
+    }
+
+    void OnEnable()
+    {
+        if (inventoryUI == null) return;
+
+        inventoryUI.onItemEquipped += SetEquipState;
+    }
+
+    void OnDisable()
+    {
+        inventoryUI.onItemEquipped -= SetEquipState;
+    }
 
     /// <summary>
     /// 장비 아이템 초기 세팅
     /// </summary>
     /// <param name="itemData"></param>
-    public void SetSlot(ItemData itemData)
+    public void SetSlot(ItemInstance itemInstance)
     {
-        if (itemData == null) return;
+        if (itemInstance == null) return;
 
-        itemSO = itemData;
+        SlotItem = itemInstance;
         countText.enabled = false;
         equipText.enabled = false;
-        icon.sprite = itemSO.itemIcon;
+        icon.sprite = SlotItem.ItemData.itemIcon;
 
         if (TryGetComponent(out slotBtn))
         {
@@ -38,18 +57,24 @@ public class ItemSlot : MonoBehaviour
     /// </summary>
     /// <param name="itemData"></param>
     /// <param name="itemCount"></param>
-    public void SetSlot(ItemData itemData, int itemCount)
+    public void SetSlot(ItemInstance itemInstance, int itemCount)
     {
-        if (itemData == null) return;
+        if (itemInstance == null) return;
 
-        itemSO = itemData;
+        SlotItem = itemInstance;
 
-        if (itemSO.isConsumable)
+        if (SlotItem.ItemData.isConsumable)
         {
             equipText.enabled = false;
 
-            this.itemCount = itemCount;
+            SlotItem.AddItem(itemCount);
             countText.text = itemCount.ToString();
+            icon.sprite = SlotItem.ItemData.itemIcon;
+
+            if (TryGetComponent(out slotBtn))
+            {
+                slotBtn.onClick.AddListener(OpenDescription);
+            }
         }
     }
 
@@ -58,16 +83,37 @@ public class ItemSlot : MonoBehaviour
     /// </summary>
     /// <param name="itemData"></param>
     /// <param name="itemCount"></param>
-    public void AddItem(ItemData itemData, int itemCount)
+    public void AddItem(ItemInstance itemInstance, int itemCount)
     {
-        if (itemSO != itemData) return;
+        if (SlotItem != itemInstance) return;
 
-        this.itemCount += itemCount;
+        SlotItem.AddItem(itemCount);
         countText.text = itemCount.ToString();
+    }
+
+    public void SetEquipState(ItemInstance itemInstance, bool isEquipped)
+    {
+        if (SlotItem != itemInstance) return;
+
+        equipText.enabled = isEquipped;
+    }
+
+    public void ConsumeItem()
+    {
+        if (SlotItem == null) return;
+        
+        if (SlotItem.UseItem())
+        {
+            Destroy(gameObject);
+        }
+        countText.text = SlotItem.Count.ToString();
     }
 
     private void OpenDescription()
     {
-
+        if (SlotItem.ItemData.isConsumable)
+            inventoryUI.SetConsumablePopUp(SlotItem, this);
+        else
+            inventoryUI.SetEquipmentPopUp(SlotItem);
     }
 }

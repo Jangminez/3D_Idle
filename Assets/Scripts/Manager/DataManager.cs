@@ -3,37 +3,41 @@ using UnityEngine;
 
 public class DataManager : MonoBehaviour
 {
-    [Header("StageData")]
-    [SerializeField] private List<StageData> stageDataList;
+    // Stage Data
+    [SerializeField] private StageData[] stageDatas;
     private Dictionary<int, StageData> stageDataDict;
 
-    [Header("MonsterData")]
-    [SerializeField] private List<Monster> monsterDataList;
+    // Monster Data
+    [SerializeField] private Monster[] monsterPrefabs;
     private Dictionary<string, Monster> monsterDataDict;
 
-    [Header("ItemData")]
-    [SerializeField] private List<ItemData> itemDataList;
+    // Item Data
+    [SerializeField] private ItemData[] itemDatas;
     private Dictionary<int, ItemData> itemDataDict;
 
     void Awake()
     {
+        stageDatas = Resources.LoadAll<StageData>("Data/Stage");
+        monsterPrefabs = Resources.LoadAll<Monster>("Data/Monster");
+        itemDatas = Resources.LoadAll<ItemData>("Data/Item");
+        
         stageDataDict = new Dictionary<int, StageData>();
 
-        foreach (var stage in stageDataList)
+        foreach (var stage in stageDatas)
         {
             stageDataDict.Add(stage.stageKey, stage);
         }
 
         monsterDataDict = new Dictionary<string, Monster>();
 
-        foreach (var monster in monsterDataList)
+        foreach (var monster in monsterPrefabs)
         {
             monsterDataDict.Add(monster.name, monster);
         }
 
         itemDataDict = new Dictionary<int, ItemData>();
 
-        foreach (var item in itemDataList)
+        foreach (var item in itemDatas)
         {
             itemDataDict.Add(item.itemKey, item);
         }
@@ -59,11 +63,11 @@ public class DataManager : MonoBehaviour
         return null;
     }
 
-    public ItemData GetItemByKey(int key)
+    public ItemInstance GetItemByKey(int key)
     {
         if (itemDataDict.ContainsKey(key))
         {
-            return itemDataDict[key];
+            return new ItemInstance(itemDataDict[key]);
         }
 
         return null;

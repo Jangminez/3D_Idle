@@ -13,7 +13,8 @@ public abstract class UnitBase : MonoBehaviour
 
     [Header("Stat")]
     protected UnitStatSO statSO;
-    public UnitStat unitStat;
+    [SerializeField] protected UnitStat unitStat;
+    public UnitStat Stat { get => unitStat; }
     protected float currentHealth;
 
     public IdleState IdleState { get; private set; }
@@ -37,9 +38,6 @@ public abstract class UnitBase : MonoBehaviour
 
     public virtual void Init(int level)
     {
-        currentHealth = unitStat.maxHealth;
-        Agent.speed = unitStat.moveSpeed;
-
         stateMachine.ChangeState(IdleState);
 
         if (hpBar != null)

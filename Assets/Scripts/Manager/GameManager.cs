@@ -1,28 +1,29 @@
 public class GameManager : Singleton<GameManager>
 {
-    Player player;
-    StageManager stageManager;
-    DataManager dataManager;
-    UIManager uIManager;
+    public Player Player { get; private set; }
+    public StageManager StageManager { get; private set; }
+    public DataManager DataManager { get; private set; }
+    public UIManager UIManager{ get; private set; }
 
     protected override void Awake()
     {
         base.Awake();
 
-        player = FindObjectOfType<Player>();
-        stageManager = GetComponentInChildren<StageManager>();
-        dataManager = GetComponentInChildren<DataManager>();
-        uIManager = GetComponentInChildren<UIManager>();
+        DataManager = GetComponentInChildren<DataManager>();
+
+        Player = FindObjectOfType<Player>();
+        StageManager = GetComponentInChildren<StageManager>();
+        UIManager = GetComponentInChildren<UIManager>();
     }
 
     void Start()
     {
-        if (stageManager)
-            stageManager.Init(this, dataManager, player);
+        if (StageManager)
+            StageManager.Init(this);
 
-        if (uIManager)
-            uIManager.Init(this, player.Events);
+        if (UIManager)
+            UIManager.Init(this);
             
-        player.Init(1);
+        Player.Init(1);
     }
 }
