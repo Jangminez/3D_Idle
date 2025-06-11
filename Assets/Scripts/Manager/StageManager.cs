@@ -87,8 +87,12 @@ public class StageManager : MonoBehaviour
 
         if (stageData.hasBoss)
         {
-            SpawnBoss(stageData.bossType);
-            yield return new WaitUntil(() => IsBossDeath());
+            SpawnBoss(stageData.bossType, () =>
+            {
+                player.SetMonsters(waveMonsters);
+            });
+            
+            yield return new WaitUntil(() => IsWaveCleared());
         }
 
         yield return new WaitForSeconds(3f);
@@ -113,19 +117,17 @@ public class StageManager : MonoBehaviour
         onCompleted?.Invoke();
     }
 
-    private void SpawnBoss(string bossType)
+    private void SpawnBoss(string bossType, Action onCompleted)
     {
         Monster boss = monsterSpawner.SpawnMonster(bossType, mapInfo.GetRandomSpawnPosition());
+        waveMonsters.Add(boss);
+
+        onCompleted?.Invoke();
     }
 
     private bool IsWaveCleared()
     {
         return waveMonsters.Count == 0;
-    }
-
-    private bool IsBossDeath()
-    {
-        return false;
     }
 
     public void RemoveMonster(Monster monster)

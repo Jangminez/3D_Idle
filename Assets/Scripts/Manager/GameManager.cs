@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -31,9 +29,8 @@ public class GameManager : Singleton<GameManager>
         if (UIManager)
             UIManager.Init(this);
 
-        Player.Init(1);
-
         ChangeStage(CurStageKey);
+        Player.Init(1);
     }
 
     public void ChangeStage(int stageKey)

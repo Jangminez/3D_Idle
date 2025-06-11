@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : UnitBase, IDamgeable
@@ -67,6 +66,8 @@ public class Player : UnitBase, IDamgeable
         base.Init(level);
 
         InitRaiseEvents();
+
+        GetReward(1000000, 0);
     }
 
     protected override void Update()
@@ -101,7 +102,7 @@ public class Player : UnitBase, IDamgeable
         foreach (var monster in monsters.ToList())
         {
             if (monster == null) continue;
-            
+
             if (Vector3.Distance(transform.position, monster.transform.position) <= unitStat.attackRange)
             {
                 if (monster.TryGetComponent(out IDamgeable damgeable))
@@ -288,11 +289,5 @@ public class Player : UnitBase, IDamgeable
                 speedMultiplier = isApply ? speedMultiplier + multiplier : speedMultiplier - multiplier;
                 break;
         }
-    }
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(transform.position + Vector3.up * 0.5f, unitStat.attackRange);
     }
 }

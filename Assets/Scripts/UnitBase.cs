@@ -86,13 +86,11 @@ public abstract class UnitBase : MonoBehaviour
 
     public virtual void Attack()
     {
-        Debug.Log($"{name}: 의 공격!");
+        
     }
 
     protected virtual void Die()
     {
-        Debug.Log($"{name} 죽음.");
-
         stateMachine.ChangeState(DieState);
         IsDie = true;
     }
