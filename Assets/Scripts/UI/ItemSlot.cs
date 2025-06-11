@@ -135,7 +135,7 @@ public class ItemSlot : MonoBehaviour
         else
         {
             countText.enabled = false;
-            equipText.enabled = false;
+            equipText.enabled = SlotItem.IsEquip;
             icon.sprite = SlotItem.ItemData.itemIcon;
         }
     }

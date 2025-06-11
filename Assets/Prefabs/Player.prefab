@@ -2582,7 +2582,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 122
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!195 &2637448110970685129
 NavMeshAgent:
@@ -2627,6 +2627,9 @@ MonoBehaviour:
     moveSpeed: 0
     chaseRange: 0
   playerStatSO: {fileID: 11400000, guid: 67fa3d80cbd2cb84b8e154fdb9f939ec, type: 2}
+  monsterLayer:
+    serializedVersion: 2
+    m_Bits: 128
   bonusHealth: 0
   bonusAttackDamage: 0
   bonusDefense: 0

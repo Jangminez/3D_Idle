@@ -22,7 +22,7 @@ public class IdleState : IState
 
     public void Update()
     {
-        if (unit.Target != null && unit.IsTargetInRange(unit.Stat.chaseRange))
+        if (unit.Target != null && unit.IsTargetInRange(unit.Stat.chaseRange) && !unit.IsTargetDie())
         {
             unit.stateMachine.ChangeState(unit.ChasingState);
             return;

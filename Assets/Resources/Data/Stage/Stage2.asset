@@ -10,18 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 28cfdba755a8d604ab71b2b62f335a89, type: 3}
-  m_Name: Stage1
+  m_Name: Stage2
   m_EditorClassIdentifier: 
-  stageKey: 1
+  stageKey: 2
   stagePrefab: {fileID: 1035982102878291309, guid: c6ca5ddef55fe7e45957cd2f00cc5998,
     type: 3}
   waves:
   - monsterSpawns:
     - monsterType: BlueGhoul
+      count: 10
+    - monsterType: GreenGhoul
       count: 3
     delayToNextWave: 3
   - monsterSpawns:
     - monsterType: BlueGhoul
+      count: 10
+    - monsterType: GreenGhoul
       count: 5
     delayToNextWave: 3
   hasBoss: 0

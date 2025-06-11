@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1460b201d945d6f4093ea32898beb62c, type: 3}
-  m_Name: TestItem 2
+  m_Name: IronShield
   m_EditorClassIdentifier: 
-  itemKey: 3
-  itemName: Iron Armor
-  itemIcon: {fileID: 21300000, guid: 567fdd2e557fefc478f8aaa7ae56fb11, type: 3}
-  equipType: 3
+  itemKey: 8
+  itemName: Iron Shield
+  itemIcon: {fileID: 21300000, guid: 256205b9c6ca12c45ab7762da8a65631, type: 3}
+  equipType: 1
   statType: 2
-  baseValue: 30
-  valuePerUpgradeLevel: 20
-  costPerUpgradeLevel: 200
+  baseValue: 100
   description: 'Increase Defense {0} '
+  valuePerUpgradeLevel: 30
+  costPerUpgradeLevel: 500
+  itemCost: 2000
   isConsumable: 0
   isTemporary: 0
   duration: 0

@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1460b201d945d6f4093ea32898beb62c, type: 3}
-  m_Name: TestItem
+  m_Name: IronHelmet
   m_EditorClassIdentifier: 
-  itemKey: 1
-  itemName: Wood Sword
-  itemIcon: {fileID: 21300000, guid: 2ddf0348701148a4d8a7c6a0f7f146b3, type: 3}
-  equipType: 0
-  statType: 0
-  baseValue: 30
-  valuePerUpgradeLevel: 10
-  costPerUpgradeLevel: 100
-  description: Increase AttackDamage {0}
+  itemKey: 11
+  itemName: Iron Helmet
+  itemIcon: {fileID: 21300000, guid: b227c6c1c35b36940b602110d9556b13, type: 3}
+  equipType: 2
+  statType: 2
+  baseValue: 50
+  description: 'Increase Defense {0} '
+  valuePerUpgradeLevel: 20
+  costPerUpgradeLevel: 400
+  itemCost: 1300
   isConsumable: 0
   isTemporary: 0
   duration: 0

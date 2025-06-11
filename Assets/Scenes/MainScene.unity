@@ -488,7 +488,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dde2717a4f1c3d469edbf45d94e4999, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curStageKey: 1
   stageParent: {fileID: 1073380791}
 --- !u!1 &265722594
 GameObject:
@@ -2222,7 +2221,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 87
+    m_Bits: 215
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -3388,6 +3387,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4917761259257223139, guid: cfd2d701c03420940a43e0cc6f8869b4,
+        type: 3}
+      propertyPath: monsterLayer.m_Bits
+      value: 128
       objectReference: {fileID: 0}
     - target: {fileID: 8075295401136186841, guid: cfd2d701c03420940a43e0cc6f8869b4,
         type: 3}

@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1460b201d945d6f4093ea32898beb62c, type: 3}
-  m_Name: TestItem 3
+  m_Name: WoodShield
   m_EditorClassIdentifier: 
-  itemKey: 4
-  itemName: Iron Boot
-  itemIcon: {fileID: 21300000, guid: 5170e0068a8cf184fb119834fa7ba0f3, type: 3}
-  equipType: 4
-  statType: 3
-  baseValue: 2
-  valuePerUpgradeLevel: 0.1
-  costPerUpgradeLevel: 1000
-  description: 'Increase Speed {0}    '
+  itemKey: 10
+  itemName: Wood Shield
+  itemIcon: {fileID: 21300000, guid: 615f3cdaa1374bd4db14286066f31cde, type: 3}
+  equipType: 1
+  statType: 2
+  baseValue: 30
+  description: 'Increase Defense {0} '
+  valuePerUpgradeLevel: 10
+  costPerUpgradeLevel: 200
+  itemCost: 300
   isConsumable: 0
   isTemporary: 0
   duration: 0

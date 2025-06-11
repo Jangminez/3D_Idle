@@ -4,17 +4,17 @@ using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour
 {
-    private UIManager uIManager;
+    private GameManager gameManager;
     private PlayerEventHandler playerEvent;
     [SerializeField] Image expBar;
     [SerializeField] TextMeshProUGUI levelText;
     [SerializeField] TextMeshProUGUI goldText;
     [SerializeField] TextMeshProUGUI stageText;
 
-    public void Init(UIManager uIManager)
+    public void Init(GameManager gameManager)
     {
-        this.uIManager = uIManager;
-        playerEvent = uIManager.Player.Events;
+        this.gameManager = gameManager;
+        playerEvent = gameManager.Player.Events;
 
         OnEnable();
     }
@@ -26,13 +26,15 @@ public class GameUI : MonoBehaviour
         playerEvent.onLevelChanged += UpdateLevelUI;
         playerEvent.onExpChanged += UpdateExpUI;
         playerEvent.onGoldChanged += UpdateGoldUI;
+        gameManager.onStageChanged += UpdateStageUI;
     }
-    
+
     void OnDisable()
     {
         playerEvent.onLevelChanged -= UpdateLevelUI;
         playerEvent.onExpChanged -= UpdateExpUI;
         playerEvent.onGoldChanged -= UpdateGoldUI;
+        gameManager.onStageChanged -= UpdateStageUI;
     }
 
     private void UpdateLevelUI(int level)
@@ -48,5 +50,10 @@ public class GameUI : MonoBehaviour
     private void UpdateGoldUI(int gold)
     {
         goldText.text = gold.ToString();
+    }
+
+    private void UpdateStageUI(int stageKey)
+    {
+        stageText.text = stageKey.ToString();
     }
 }

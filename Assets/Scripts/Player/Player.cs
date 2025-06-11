@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : UnitBase, IDamgeable
@@ -7,6 +9,7 @@ public class Player : UnitBase, IDamgeable
     [SerializeField] PlayerStatSO playerStatSO;
     private List<Monster> monsters = new List<Monster>();
 
+    [SerializeField] private LayerMask monsterLayer;
     private int currentLevel = 1;
     private int currentExp = 0;
     private int requiredExp;
@@ -70,7 +73,7 @@ public class Player : UnitBase, IDamgeable
     {
         base.Update();
 
-        if (Target == null && monsters != null)
+        if (Target == null || IsTargetDie() && monsters != null)
         {
             FindNextTarget();
         }
@@ -85,7 +88,7 @@ public class Player : UnitBase, IDamgeable
 
     public void StartStage(Vector3 startPosition)
     {
-        transform.position = startPosition;
+        Agent.Warp(startPosition);
         CurrentHealth = TotalMaxHealth;
     }
 
@@ -93,11 +96,22 @@ public class Player : UnitBase, IDamgeable
     {
         base.Attack();
 
-        if (Target.TryGetComponent(out IDamgeable damgeable))
+        if (monsters == null) return;
+
+        foreach (var monster in monsters.ToList())
         {
-            damgeable.TakeDamage(TotalAttackDamage);
+            if (monster == null) continue;
+            
+            if (Vector3.Distance(transform.position, monster.transform.position) <= unitStat.attackRange)
+            {
+                if (monster.TryGetComponent(out IDamgeable damgeable))
+                {
+                    damgeable.TakeDamage(TotalAttackDamage);
+                }
+            }
         }
     }
+
     public void TakeDamage(float damage)
     {
         float finalDamage = damage - TotalDefense > 0 ? damage - TotalDefense : 1;
@@ -107,6 +121,14 @@ public class Player : UnitBase, IDamgeable
         {
             Die();
         }
+    }
+
+    public void Respawn()
+    {
+        CurrentHealth = TotalMaxHealth;
+        Agent.isStopped = false;
+
+        GameManager.Instance.RestartStage();
     }
 
     public void SetMonsters(List<Monster> monsters)
@@ -266,5 +288,11 @@ public class Player : UnitBase, IDamgeable
                 speedMultiplier = isApply ? speedMultiplier + multiplier : speedMultiplier - multiplier;
                 break;
         }
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(transform.position + Vector3.up * 0.5f, unitStat.attackRange);
     }
 }

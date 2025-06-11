@@ -33,7 +33,7 @@ public class UIManager : MonoBehaviour
         StatusUI = GetComponentInChildren<StatusUI>();
 
         if (GameUI)
-            GameUI.Init(this);
+            GameUI.Init(gameManager);
 
         if (InventoryUI)
         {
@@ -51,7 +51,7 @@ public class UIManager : MonoBehaviour
 
         if (StageUI)
         {
-            StageUI.Init(gameManager.StageManager, gameManager.DataManager);
+            StageUI.Init(gameManager);
             togglePanels.Add(StageUI.gameObject);
             stageButton.onClick.AddListener(() => TogglePanel(StageUI.gameObject));
         }

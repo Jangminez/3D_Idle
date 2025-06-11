@@ -20,6 +20,8 @@ public abstract class UnitBase : MonoBehaviour
     public IdleState IdleState { get; private set; }
     public ChasingState ChasingState { get; private set; }
     public AttackState AttackState { get; private set; }
+    public DieState DieState { get; private set; }
+    public bool IsDie { get; set; }
 
     private HpBar hpBar;
     public Action<float, float> onHealthChanged;
@@ -34,21 +36,24 @@ public abstract class UnitBase : MonoBehaviour
         IdleState = new IdleState(this);
         ChasingState = new ChasingState(this);
         AttackState = new AttackState(this);
+        DieState = new DieState(this);
     }
 
     public virtual void Init(int level)
     {
+        IsDie = false;
         stateMachine.ChangeState(IdleState);
 
         if (hpBar != null)
         {
             hpBar.Init(this);
         }
-        
+
     }
 
     public virtual void Init(StageManager stageManager, Player player, int stageLevel)
     {
+        IsDie = false;
         currentHealth = unitStat.maxHealth;
         Agent.speed = unitStat.moveSpeed;
 
@@ -88,6 +93,24 @@ public abstract class UnitBase : MonoBehaviour
     {
         Debug.Log($"{name} 죽음.");
 
+        stateMachine.ChangeState(DieState);
+        IsDie = true;
+    }
+
+    public void DestoryObject()
+    {
         Destroy(gameObject);
+    }
+
+    public bool IsTargetDie()
+    {
+        if (Target == null) return true;
+
+        if (Target.TryGetComponent(out UnitBase target))
+        {
+            return target.IsDie;
+        }
+
+        return true;
     }
 }

@@ -30,11 +30,6 @@ public class Monster : UnitBase, IDamgeable
         base.Init(stage);
     }
 
-    public void SetStageManager(StageManager stageManager)
-    {
-        this.stageManager = stageManager;
-    }
-
     public override void Attack()
     {
         base.Attack();
@@ -60,9 +55,9 @@ public class Monster : UnitBase, IDamgeable
 
     protected override void Die()
     {
+        base.Die();
+
         stageManager.RemoveMonster(this);
         player.GetReward(dropGold, dropExp);
-
-        base.Die();
     }
 }

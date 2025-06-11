@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class StageUI : MonoBehaviour
 {
-    private StageManager stageManager;
+    private GameManager gameManager;
     private DataManager dataManager;
 
     [SerializeField] GameObject stageSlotPrefab;
     [SerializeField] Transform stageContent;
 
-    public void Init(StageManager stageManager, DataManager dataManager)
+    public void Init(GameManager gameManager)
     {
-        this.stageManager = stageManager;
-        this.dataManager = dataManager;
+        this.gameManager = gameManager;
+        dataManager = gameManager.DataManager;
 
         SetStage();
     }
@@ -32,6 +32,6 @@ public class StageUI : MonoBehaviour
 
     public void StartStage(StageData stageData)
     {
-        stageManager.SetStage(stageData.stageKey);
+        gameManager.ChangeStage(stageData.stageKey);
     }
 }

@@ -34,7 +34,7 @@ public class AttackState : IState
 
     public void Update()
     {
-        if (unit.Target == null || !unit.IsTargetInRange(unit.Stat.attackRange))
+        if (unit.Target == null || !unit.IsTargetInRange(unit.Stat.attackRange) || unit.IsTargetDie())
         {
             unit.stateMachine.ChangeState(unit.IdleState);
             return;

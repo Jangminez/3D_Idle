@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a86f6c387d9d72b448df6ad2a02fd771, type: 3}
+  m_Name: BossGhoul
+  m_EditorClassIdentifier: 
+  baseMaxHealth: 500
+  baseAttackDamage: 100
+  baseAttackRange: 3
+  baseAttackSpeed: 1
+  baseDefense: 50
+  baseMoveSpeed: 2
+  baseChaseRange: 5
+  healthPerLevel: 500
+  attackPerLevel: 200
+  defensePerLevel: 100
+  baseGoldDrop: 1000
+  baseExpDrop: 500
+  goldPerStage: 1000
+  expPerStage: 500
